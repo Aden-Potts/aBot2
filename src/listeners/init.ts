@@ -1,6 +1,7 @@
 import {Client, Collection, SlashCommandBuilder, REST, Routes} from "discord.js";
 import { Bot } from "src/exports/bot";
 import {Logger} from "../exports/logging";
+import interaction from "./interaction";
 
 const filesys = require("fs");
 
@@ -14,7 +15,8 @@ export default (abot: Bot): void => {
 
         Logger.Info(`Bot starting up using ID ${client.user.tag}. Loading commands...`)
 
-        loadCommands(client, abot);
+        await loadCommands(client, abot);
+        await interaction(abot);
     });
 }
 
@@ -24,7 +26,7 @@ const loadCommands = async (client: Client, abot?: Bot): Promise<void> => {
     let commands = [];
 
     for(const folder of filesys.readdirSync('./src/commands')){
-        const commandFiles = filesys.readdirSync(`./src/commands/${folder}`).filter((file: string) => file.endsWith('.js')); 
+        const commandFiles = filesys.readdirSync(`./src/commands/${folder}`).filter((file: string) => file.endsWith('.ts')); 
     
         for(const file of commandFiles){
             /* We loop through each file in the command directory, and require it due to me using exports to handle command creation. */
@@ -66,6 +68,7 @@ const loadCommands = async (client: Client, abot?: Bot): Promise<void> => {
             //client.CommandList.set(command.name, command);
             abot?.commands?.set(command.name, command); //add command data to the command list collection.
 
+            console.log(abot?.commands.get("ping"));
             commands.push(cmdData);
             Logger.Info('Command Loaded!');
         }

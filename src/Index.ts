@@ -2,6 +2,7 @@ require("dotenv").config();
 
 import {Client, ClientOptions, Collection, REST, GatewayIntentBits} from "discord.js";
 import {Bot} from "./exports/bot";
+import { Logger } from "./exports/logging";
 import init from "./listeners/init";
 
 // Construct the client object.
@@ -13,5 +14,6 @@ const aBot = new Bot(client); // We won't pass the commandlist here, during the 
 
 // Initialize the bot.
 init(aBot);
+
 
 client.login(process.env.LoginToken);
