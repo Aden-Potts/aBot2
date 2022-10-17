@@ -1,0 +1,20 @@
+{
+  "name": "abot3",
+  "version": "2.1.0",
+  "description": "aBot 2.1 for Discord",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/Index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adamantite",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.2.0",
+    "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  }
+}
