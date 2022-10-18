@@ -1,4 +1,4 @@
-import {Client, Interaction, SlashCommandBuilder, GatewayIntentBits, REST, Routes, PermissionResolvable, PermissionsBitField} from "discord.js";
+import {Interaction, PermissionsBitField} from "discord.js";
 import { Bot } from "src/exports/bot";
 import {Logger} from "../exports/logging";
 

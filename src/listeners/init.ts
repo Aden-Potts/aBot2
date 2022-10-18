@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 import {Client, Collection, SlashCommandBuilder, REST, Routes} from "discord.js";
 import { Bot } from "src/exports/bot";
 import {Logger} from "../exports/logging";
@@ -17,6 +19,10 @@ export default (abot: Bot): void => {
 
         await loadCommands(client, abot);
         await interaction(abot);
+
+        client.user.setActivity("aBot2.0");
+
+        Logger.Info("Bot has been started!");
     });
 }
 
@@ -79,7 +85,7 @@ const loadCommands = async (client: Client, abot?: Bot): Promise<void> => {
         try {
            Logger.Debug("Sending command list to Discord via REST");
     
-            await rest.put(Routes.applicationCommands("500059201549369344"), {body:commands}).catch((e: string) => {
+            await rest.put(Routes.applicationCommands(process.env.ApplicationID ?? ""), {body:commands}).catch((e: string) => {
                 Logger.Error(e);
 
                 return;

@@ -1,4 +1,5 @@
-//
+require("dotenv").config(); // load up environment config
+
 import {Client, Collection, PermissionResolvable} from "discord.js";
 
 export type CommandOption = {
