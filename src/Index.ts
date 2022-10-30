@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-import {Client, ClientOptions, Collection, REST, GatewayIntentBits} from "discord.js";
+import {Client, GatewayIntentBits} from "discord.js";
 import {Bot} from "./exports/bot";
 import { Logger } from "./exports/logging";
 import init from "./listeners/init";

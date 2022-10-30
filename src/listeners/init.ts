@@ -1,13 +1,14 @@
 require("dotenv").config();
 
-import {Client, Collection, SlashCommandBuilder, REST, Routes} from "discord.js";
-import { Bot } from "src/exports/bot";
+import {Client, SlashCommandBuilder, REST, Routes, Guild} from "discord.js";
+import { Bot, GuildSettings } from "src/exports/bot";
 import {Logger} from "../exports/logging";
 import interaction from "./interaction";
 
 const filesys = require("fs");
 
-export default (abot: Bot): void => {
+
+export default async (abot: Bot): Promise<void> => {
     const client: Client = abot.clientObj;
 
     client.on("ready", async () => {
@@ -17,7 +18,10 @@ export default (abot: Bot): void => {
 
         Logger.Info(`Bot starting up using ID ${client.user.tag}. Loading commands...`)
 
-        await loadCommands(client, abot);
+        await loadCommands(abot);
+        await loadGuildData(abot).then(() => {
+            console.log(abot.guilds);
+        });
         await interaction(abot);
 
         client.user.setActivity("aBot2.0");
@@ -26,7 +30,7 @@ export default (abot: Bot): void => {
     });
 }
 
-const loadCommands = async (client: Client, abot?: Bot): Promise<void> => {
+const loadCommands = async (abot: Bot): Promise<void> => {
     const rest = new REST({version: "10"}).setToken(process.env.LoginToken ?? "");
 
     let commands = [];
@@ -46,7 +50,8 @@ const loadCommands = async (client: Client, abot?: Bot): Promise<void> => {
     
             // Loop through module.exports.options. Generally, it should look something like this: {type:"str", name:"randomtext", desc:"some random ass text to print out", req:true}
             for(const d of command.options) {
-                //Logger.Debug(`Adding Option ${d.name} of type ${d.type}`);
+                //Logger.Debug(`Adding Option ${d.name} of type ${d.type}`)
+                d.name = d.name.toLowerCase(d.name);
                 switch(d.type) {
                     case "str":
                         cmdData.addStringOption(option => option.setName(d.name).setDescription(d.desc).setRequired(d.req));
@@ -72,9 +77,8 @@ const loadCommands = async (client: Client, abot?: Bot): Promise<void> => {
             }
     
             //client.CommandList.set(command.name, command);
-            abot?.commands?.set(command.name, command); //add command data to the command list collection.
+            abot.commands.set(command.name, command); //add command data to the command list collection.
 
-            console.log(abot?.commands.get("ping"));
             commands.push(cmdData);
             Logger.Info('Command Loaded!');
         }
@@ -97,4 +101,17 @@ const loadCommands = async (client: Client, abot?: Bot): Promise<void> => {
         }
     })();
 
+}
+
+const loadGuildData = async(abot: Bot): Promise<void> => {
+    const client = abot.clientObj;
+    const guilds = client.guilds.cache;
+    
+    await guilds.each(g => {
+        g.fetchOwner().then((owner) => {
+            var data: GuildSettings = abot.LoadGuildSettings(g.id);
+
+            abot.guilds.set(g.id, {name:g.name, owner:owner, settings: data});
+        }).catch(Logger.Error);
+    })
 }

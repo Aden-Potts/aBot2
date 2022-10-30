@@ -3,3 +3,4 @@ node_modules
 src_old
 src/data
 !src/data/defaultSettings.json
+data
