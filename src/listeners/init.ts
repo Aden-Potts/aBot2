@@ -19,9 +19,7 @@ export default async (abot: Bot): Promise<void> => {
         Logger.Info(`Bot starting up using ID ${client.user.tag}. Loading commands...`)
 
         await loadCommands(abot);
-        await loadGuildData(abot).then(() => {
-            console.log(abot.guilds);
-        });
+        await loadGuildData(abot);
         await interaction(abot);
 
         client.user.setActivity("aBot2.0");
