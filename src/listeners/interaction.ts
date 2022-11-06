@@ -1,4 +1,4 @@
-import {Interaction, PermissionsBitField} from "discord.js";
+import {GuildMember, Interaction, PermissionsBitField} from "discord.js";
 import { Bot } from "src/exports/bot";
 import {Logger} from "../exports/logging";
 
@@ -12,6 +12,7 @@ export default (abot: Bot): void => {
 
         var commandName = interaction.commandName;
         var cmd = abot.commands.get(commandName);
+        var member = interaction.member as GuildMember
 
         if(cmd) {
             if(!interaction.inGuild() && cmd.dm === false) {
@@ -29,10 +30,12 @@ export default (abot: Bot): void => {
             try {
                 cmd.exec(interaction, abot)
             } catch(e: any) {
-                Logger.Error(e);
+
+                Logger.Error(`An error appeared while executing command ${commandName} from member ${member.user.tag} (${member.id}): //////////////\n${e}\n//////////////`);
                 interaction.reply({content:"Uh oh! An error appeared while executing this command. Please try again later.", ephemeral:true});
             };
 
+            Logger.Info(`${member.user.tag} (${member.id}) executed command ${commandName}.`)
         }
     })
 }
