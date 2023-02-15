@@ -15,16 +15,10 @@ export default (abot: Bot): void => {
         var member = interaction.member as GuildMember
 
         if(cmd) {
-            if(!interaction.inGuild() && cmd.dm === false) {
-                interaction.reply("This command isn't available in DMs.");
+            if(cmd.permission != PermissionsBitField.Flags.SendMessages && !interaction.memberPermissions?.has(cmd.permission)) {
+                interaction.reply({content:"You do not have access to this command!", ephemeral:true});
 
                 return;
-            } else {
-                if(cmd.dm === false && cmd.permission != PermissionsBitField.Flags.SendMessages && !interaction.memberPermissions?.has(cmd.permission)) {
-                    interaction.reply({content:"You do not have access to this command!", ephemeral:true});
-
-                    return;
-                }
             }
 
             try {

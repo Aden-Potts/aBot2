@@ -57,6 +57,9 @@ const loadCommands = async (abot: Bot): Promise<void> => {
                     case "num":
                         cmdData.addIntegerOption(option => option.setName(d.name).setDescription(d.desc).setRequired(d.req));
                         break;
+                    case "int":
+                        cmdData.addIntegerOption(option => option.setName(d.name).setDescription(d.desc).setRequired(d.req));
+                        break;
                     case "bool":
                         cmdData.addBooleanOption(option => option.setName(d.name).setDescription(d.desc).setRequired(d.req));
                         break;
@@ -72,6 +75,12 @@ const loadCommands = async (abot: Bot): Promise<void> => {
     
             if(command.permission != 0) { // in the old days i set 0 as everyone has access. with discord slashcommands, 0 means no one has access so we just skip adding permissions if its for everyone. im too lazy to change my ways.
                 cmdData.setDefaultMemberPermissions(command.permission);
+            }
+
+            if(command.dm == false) {
+                cmdData.setDMPermission(false);
+            } else {
+                cmdData.setDMPermission(true);
             }
     
             //client.CommandList.set(command.name, command);
