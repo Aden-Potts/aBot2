@@ -84,7 +84,7 @@ export class Bot {
 
     SaveGuildSettings(gid: string, settings: GuildSettings): void {
         if(!filesys.existsSync(`./data/guilds/${gid}`))
-            filesys.promises.mkdir(`./data/guilds/${gid}`).catch(Logger.Error)
+            filesys.promises.mkdir(`./data/guilds/${gid}`, {recursive: true}).catch(Logger.Error)
 
         filesys.promises.writeFile(`./data/guilds/${gid}/settings.json`, JSON.stringify(settings)).catch(Logger.Error);
     }
